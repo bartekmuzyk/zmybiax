@@ -48,7 +48,7 @@ namespace Zmybiax
 
         public static string[] ParsePath(this string source)
         {
-            return source.Split("/");
+            return source.Split('\\');
         }
 
         public static string StringifyPath(this string[] source)
@@ -56,7 +56,7 @@ namespace Zmybiax
             string final = "";
             foreach (string part in source)
             {
-                final = final + part + "/";
+                final = final + part + '\\';
             }
             return final;
         }
@@ -130,6 +130,22 @@ namespace Zmybiax
                 Console.Write(Environment.NewLine);             //New line
             }
             Console.ForegroundColor = ConsoleColor.White;
+        }
+
+        public static void DeleteDirectoryRecursively(this CosmosVFS fs, string aPath)
+        {
+            List<DirectoryEntry> files = fs.GetDirectoryListing(aPath);
+            foreach (DirectoryEntry file in files)
+            {
+                if (file.mEntryType == DirectoryEntryTypeEnum.File)
+                {
+                    fs.DeleteFile(fs.GetFile(file.mFullPath));
+                }
+                else if (file.mEntryType == DirectoryEntryTypeEnum.Directory)
+                {
+                    fs.DeleteDirectoryRecursively(file.mFullPath);
+                }
+            }
         }
     }
 }

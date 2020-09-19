@@ -28,21 +28,22 @@ namespace Zmybiax
             Console.WriteLine(" /    /|  Y Y /\\___  | | \\_\\ \\  |/ __ \\_>    < ");
             Console.WriteLine("/_____ \\__|_|  / ____| |___  /__(____  /__/\\_ \\");
             Console.WriteLine("      \\/     \\/\\/          \\/        \\/      \\/");
-            bool systemTest = fs.DirectoryExists("0:/system");
+            bool systemTest = fs.DirectoryExists(@"0:\system");
+            //bool systemTest = false;
             if (!systemTest)
             {
-                fs.CreateDirectory("system");
+                fs.CreateDirectory(@"0:\system");
                 Console.WriteLine("Przygotowywanie systemu...");
-                fs.CreateFile("system/startup.cmd");
-                fs.WriteFile("system/startup.cmd", "# Put your commands you want to run at startup here!");
-                fs.CreateDirectory("user");
-                fs.CreateDirectory("applications");
-                fs.CreateDirectory("config");
-                fs.CreateDirectory("services");
+                fs.CreateFile(@"0:\system\startup.cmd");
+                fs.WriteFile(@"0:\system\startup.cmd", "# Put your commands you want to run at startup here!");
+                fs.CreateDirectory(@"0:\user");
+                fs.CreateDirectory(@"0:\applications");
+                fs.CreateDirectory(@"0:\config");
+                fs.CreateDirectory(@"0:\services");
                 Console.WriteLine("Utworz uzytkownika:");
                 Console.Write("Nazwa uzytkownika: ");
                 var username = Console.ReadLine();
-                fs.CreateDirectory("user/" + username);
+                fs.CreateDirectory(@"0:\user\" + username);
                 Console.WriteLine("Gotowe! System zostanie ponownie uruchomiony.");
                 Cosmos.System.Power.Reboot();
             }
@@ -100,8 +101,8 @@ namespace Zmybiax
             Console.BackgroundColor = ConsoleColor.Red;
             Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine("Resetowanie do ustawien fabrycznych...");
-            //TODO
-            //Cosmos.System.Power.Shutdown();
+            fs.DeleteDirectoryRecursively(@"0:\");
+            Cosmos.System.Power.Shutdown();
         }
 
         private void interpretCmd(string cmd)
