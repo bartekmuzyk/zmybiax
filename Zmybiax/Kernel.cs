@@ -3,13 +3,16 @@ using Cosmos.Debug.Kernel;
 using Cosmos.HAL;
 using Cosmos.System.FileSystem;
 using Cosmos.System.FileSystem.Listing;
+using Cosmos.System.Graphics;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Text;
 using Sys = Cosmos.System;
+using Zmybiax.ZmybiaxGraphics;
 
 namespace Zmybiax
 {
@@ -91,6 +94,7 @@ namespace Zmybiax
                         {
                             user = username;
                             userPath = new string[] { "0:", "user", user };
+                            path = userPath;
                             retry = false;
                         }
                     }
@@ -244,6 +248,13 @@ namespace Zmybiax
                             Console.WriteLine("\t-s - Wylacza komputer");
                             Console.WriteLine("\t-r - Restartuje komputer");
                         }
+                        break;
+                    case "wm":
+                        Console.WriteLine("Uruchamianie sesji...");
+                        SVGAIICanvas canvas = new SVGAIICanvas();
+                        WindowManager wm = new WindowManager(canvas);
+                        Console.ReadKey();
+                        wm.Disable();
                         break;
                     default:
                         Console.ForegroundColor = ConsoleColor.Red;
