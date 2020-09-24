@@ -63,6 +63,22 @@
         <USB_PxeInterface>192.168.0.8</USB_PxeInterface>
         <USB_EnableGDB>False</USB_EnableGDB>
         <USB_StartCosmosGDB>False</USB_StartCosmosGDB>
+        <PXE_StackCorruptionDetectionEnabled>True</PXE_StackCorruptionDetectionEnabled>
+        <PXE_StackCorruptionDetectionLevel>MethodFooters</PXE_StackCorruptionDetectionLevel>
+        <PXE_Description>Creates a PXE setup and hosts a DCHP and TFTP server to deploy directly to physical hardware. Allows debugging with a serial cable.</PXE_Description>
+        <PXE_Deployment>PXE</PXE_Deployment>
+        <PXE_Launch>None</PXE_Launch>
+        <PXE_DebugEnabled>False</PXE_DebugEnabled>
+        <PXE_DebugMode>Source</PXE_DebugMode>
+        <PXE_IgnoreDebugStubAttribute>False</PXE_IgnoreDebugStubAttribute>
+        <PXE_CosmosDebugPort>Serial: COM1</PXE_CosmosDebugPort>
+        <PXE_VisualStudioDebugPort>Pipe: Cosmos\Serial</PXE_VisualStudioDebugPort>
+        <PXE_PxeInterface>192.168.0.17</PXE_PxeInterface>
+        <PXE_EnableGDB>False</PXE_EnableGDB>
+        <PXE_StartCosmosGDB>False</PXE_StartCosmosGDB>
+        <Name>VMware User 001</Name>
+        <HyperV_Name>VMware User 001</HyperV_Name>
+        <VMware_Name>VMware User 001</VMware_Name>
     </PropertyGroup>
 
     <PropertyGroup>
@@ -74,6 +90,10 @@
         <Profile>VMware</Profile>
         <Description>Use VMware Player or Workstation to deploy and debug.</Description>
         <PxeInterface>192.168.0.8</PxeInterface>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+      <DebugEnabled>True</DebugEnabled>
     </PropertyGroup>
 
     <ItemGroup>

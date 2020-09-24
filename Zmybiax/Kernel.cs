@@ -16,9 +16,10 @@ namespace Zmybiax
     public class Kernel : Sys.Kernel
     {
         CosmosVFS fs = new Sys.FileSystem.CosmosVFS();
-        //Debugger debugger = new Debugger("", "");
+        Cosmos.Debug.Kernel.Debugger debugger = new Cosmos.Debug.Kernel.Debugger("", "");
         public string[] path;
         public string user;
+        public string[] userPath;
 
         private void Setup()
         {
@@ -49,16 +50,8 @@ namespace Zmybiax
             }
             else
             {
-                List<DirectoryEntry> users = new List<DirectoryEntry>();
-                try
-                {
-                    users = fs.GetDirectoryListing("0:/user");
-                }
-                catch (Exception e)
-                {
-                    fs.CreateDirectory("user"); 
-                }
-                if (users.Count == 0)
+                bool userTest = fs.DirectoryExists(@"0:\user");
+                if (!userTest)
                 {
                     Console.WriteLine("Nie znaleziono zadnych uzytkownikow. Zostales zalogowany na tymczasowe konto.");
                     user = "anon";
@@ -66,6 +59,15 @@ namespace Zmybiax
                 }
                 else
                 {
+                    List<DirectoryEntry> users = fs.GetDirectoryListing(@"0:\user");
+                    Console.WriteLine("Uzytkownicy:");
+                    Console.ForegroundColor = ConsoleColor.DarkBlue;
+                    foreach (DirectoryEntry user in users)
+                    {
+                        Console.WriteLine(" * " + user.mName);
+                    }
+                    Console.ForegroundColor = ConsoleColor.White;
+
                     bool retry = true;
                     while (retry)
                     {
@@ -87,7 +89,8 @@ namespace Zmybiax
                         }
                         else
                         {
-                            path = new string[] { "0:", "user", user };
+                            user = username;
+                            userPath = new string[] { "0:", "user", user };
                             retry = false;
                         }
                     }
@@ -108,6 +111,7 @@ namespace Zmybiax
         private void interpretCmd(string cmd)
         {
             string[] tokens = cmd.Split(' ');
+            char[] flags = cmd.GetFlags('-');
             if (tokens.Length != 0)
             {
                 switch (tokens[0])
@@ -136,10 +140,11 @@ namespace Zmybiax
                             switch (tokens[1])
                             {
                                 case "~":
-                                    path = new string[] { "user", user };
+                                    path = userPath;
                                     break;
                                 case "..":
-                                    path = path.Pop();
+                                    if (path.Length > 1) { path = path.Pop(); }
+                                    else { Console.WriteLine("Brak nadrzednego folderu."); }
                                     break;
                                 case ".":
                                     break;
@@ -158,7 +163,7 @@ namespace Zmybiax
                                     else
                                     {
                                         Console.ForegroundColor = ConsoleColor.Red;
-                                        Console.WriteLine("Katalog " + tokens[1] + " nie istnieje");
+                                        Console.WriteLine("Katalog " + tokens[1] + " nie istnieje.");
                                         Console.ForegroundColor = ConsoleColor.White;
                                     }
                                     break;
@@ -166,7 +171,7 @@ namespace Zmybiax
                         }
                         else
                         {
-                            path = new string[] { "user", user };
+                            path = userPath;
                         }
                         break;
                     case "loc":
@@ -189,7 +194,7 @@ namespace Zmybiax
                                         Console.WriteLine(path.StringifyPath());
                                         break;
                                     default:
-                                        if (tokens[1].StartsWith('/'))
+                                        if (tokens[1].StartsWith('\\'))
                                         {
                                             Console.WriteLine("Zla sciezka.");
                                         }
@@ -218,12 +223,12 @@ namespace Zmybiax
                     case "power":
                         if (tokens.Length > 1)
                         {
-                            switch (tokens[1])
+                            switch (flags[0])
                             {
-                                case "-s":
+                                case 's':
                                     Sys.Power.Shutdown();
                                     break;
-                                case "-r":
+                                case 'r':
                                     Sys.Power.Reboot();
                                     break;
                                 default:
@@ -237,12 +242,14 @@ namespace Zmybiax
                             Console.WriteLine("Uzycie: power [OPCJE]");
                             Console.WriteLine("Opcje:");
                             Console.WriteLine("\t-s - Wylacza komputer");
-                            Console.WriteLine("\t-r - Resetuje komputer");
+                            Console.WriteLine("\t-r - Restartuje komputer");
                         }
                         break;
                     default:
+                        Console.ForegroundColor = ConsoleColor.Red;
                         Console.Write(tokens[0]);
-                        Console.Write(" nie jest poleceniem ani programem wykonywalnym." + Environment.NewLine);
+                        Console.WriteLine(" nie jest poleceniem ani programem wykonywalnym.");
+                        Console.ForegroundColor = ConsoleColor.White;
                         break;
                 }
             }

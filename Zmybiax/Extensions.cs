@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Sys = Cosmos.System;
 
 namespace Zmybiax
@@ -82,6 +83,20 @@ namespace Zmybiax
             }
             final[len - 1] = element;
             return final;
+        }
+
+        public static char[] GetFlags(this string instruction, char detector)
+        {
+            string[] tokens = instruction.Split(' ');
+            List<char> flags = new List<char>(tokens.Length - 1);
+            foreach (string token in tokens)
+            {
+                if (token[0] == detector && token.Length < 2)
+                {
+                    flags.Add(token[1]);
+                }
+            }
+            return flags.ToArray();
         }
     }
 }

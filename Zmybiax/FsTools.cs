@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Reflection.Metadata;
 using System.Text;
 using Cosmos.Debug.Kernel;
 using Cosmos.System.FileSystem;
@@ -105,6 +106,28 @@ namespace Zmybiax
             Console.WriteLine("Lista plikow dla katalogu: " + path);
             foreach (DirectoryEntry metadata in entries)
             {
+                string unit;
+                double size;
+                if (metadata.mSize < 1024)
+                {
+                    unit = "B";
+                    size = metadata.mSize;
+                }
+                else if (metadata.mSize < 1048576)
+                {
+                    unit = "KB";
+                    size = metadata.mSize / 1024;
+                }
+                else if (metadata.mSize < 1073741824)
+                {
+                    unit = "MB";
+                    size = metadata.mSize / 1024 / 1024;
+                }
+                else {
+                    unit = "GB";
+                    size = metadata.mSize / 1024 / 1024 / 1024;
+                }
+
                 switch (metadata.mEntryType)
                 {
                     case DirectoryEntryTypeEnum.Directory:
@@ -124,9 +147,8 @@ namespace Zmybiax
                 Console.Write(metadata.mName);                  //File name
                 Console.ForegroundColor = ConsoleColor.White;   //Information must be in white color
                 Console.Write(" -- ");                          //Seperator
-                //Console.Write(metadata.mSize);                  //File size on disk
-                Console.Write("0");                             //File size on disk
-                Console.Write("B");                             //Size unit (bytes)
+                Console.Write(size);                            //File size on disk
+                Console.Write(unit);                            //Size unit
                 Console.Write(Environment.NewLine);             //New line
             }
             Console.ForegroundColor = ConsoleColor.White;
