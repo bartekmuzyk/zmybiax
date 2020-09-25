@@ -7,3 +7,12 @@ C:\Users\Bartek\source\repos\Zmybiax\Zmybiax\obj\Debug\netcoreapp2.0\cosmos\Zmyb
 C:\Users\Bartek\source\repos\Zmybiax\Zmybiax\obj\Debug\netcoreapp2.0\cosmos\Zmybiax.csproj.CoreCompileInputs.cache
 C:\Users\Bartek\source\repos\Zmybiax\Zmybiax\obj\Debug\netcoreapp2.0\cosmos\Zmybiax.dll
 C:\Users\Bartek\source\repos\Zmybiax\Zmybiax\obj\Debug\netcoreapp2.0\cosmos\Zmybiax.pdb
+C:\Users\barte\source\repos\Zmybiax\Zmybiax\bin\Debug\netcoreapp2.0\cosmos\Zmybiax.deps.json
+C:\Users\barte\source\repos\Zmybiax\Zmybiax\bin\Debug\netcoreapp2.0\cosmos\Zmybiax.dll
+C:\Users\barte\source\repos\Zmybiax\Zmybiax\bin\Debug\netcoreapp2.0\cosmos\Zmybiax.pdb
+C:\Users\barte\source\repos\Zmybiax\Zmybiax\obj\Debug\netcoreapp2.0\cosmos\Zmybiax.csprojAssemblyReference.cache
+C:\Users\barte\source\repos\Zmybiax\Zmybiax\obj\Debug\netcoreapp2.0\cosmos\Zmybiax.AssemblyInfoInputs.cache
+C:\Users\barte\source\repos\Zmybiax\Zmybiax\obj\Debug\netcoreapp2.0\cosmos\Zmybiax.AssemblyInfo.cs
+C:\Users\barte\source\repos\Zmybiax\Zmybiax\obj\Debug\netcoreapp2.0\cosmos\Zmybiax.csproj.CoreCompileInputs.cache
+C:\Users\barte\source\repos\Zmybiax\Zmybiax\obj\Debug\netcoreapp2.0\cosmos\Zmybiax.dll
+C:\Users\barte\source\repos\Zmybiax\Zmybiax\obj\Debug\netcoreapp2.0\cosmos\Zmybiax.pdb

@@ -61,6 +61,11 @@ namespace Zmybiax
             if (endl) { Console.Write(Environment.NewLine); }
         }
 
+        /// <summary>
+        /// Convert string to a character array
+        /// </summary>
+        /// <param name="source">Source string</param>
+        /// <returns>A char array</returns>
         public static char[] ToCharArray(this string source)
         {
             char[] chars = new char[source.Length];
@@ -73,6 +78,12 @@ namespace Zmybiax
             return chars;
         }
 
+        /// <summary>
+        /// Add an element to a string array
+        /// </summary>
+        /// <param name="source">Source string array</param>
+        /// <param name="element">The element to be added</param>
+        /// <returns>A new array with the element</returns>
         public static string[] AddToArray(this string[] source, string element)
         {
             int len = source.Length;
@@ -84,7 +95,12 @@ namespace Zmybiax
             final[len - 1] = element;
             return final;
         }
-
+        /// <summary>
+        /// Get flags that were applied for a specific command
+        /// </summary>
+        /// <param name="instruction">The command entered</param>
+        /// <param name="detector">The character that will be used to seperate flags from arguments</param>
+        /// <returns>A char array with all the flags</returns>
         public static char[] GetFlags(this string instruction, char detector)
         {
             string[] tokens = instruction.Split(' ');

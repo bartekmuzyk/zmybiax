@@ -253,7 +253,8 @@ namespace Zmybiax
                         Console.WriteLine("Uruchamianie sesji...");
                         SVGAIICanvas canvas = new SVGAIICanvas();
                         WindowManager wm = new WindowManager(canvas);
-                        Console.ReadKey();
+                        wm.InitWindow("Testowe okno");
+                        var key = Console.ReadKey();
                         wm.Disable();
                         break;
                     default:

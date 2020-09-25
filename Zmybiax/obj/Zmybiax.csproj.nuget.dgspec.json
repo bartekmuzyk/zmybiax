@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Bartek\\source\\repos\\Zmybiax\\Zmybiax\\Zmybiax.csproj": {}
+    "C:\\Users\\barte\\source\\repos\\Zmybiax\\Zmybiax\\Zmybiax.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Bartek\\source\\repos\\Zmybiax\\Zmybiax\\Zmybiax.csproj": {
+    "C:\\Users\\barte\\source\\repos\\Zmybiax\\Zmybiax\\Zmybiax.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Bartek\\source\\repos\\Zmybiax\\Zmybiax\\Zmybiax.csproj",
+        "projectUniqueName": "C:\\Users\\barte\\source\\repos\\Zmybiax\\Zmybiax\\Zmybiax.csproj",
         "projectName": "Zmybiax",
-        "projectPath": "C:\\Users\\Bartek\\source\\repos\\Zmybiax\\Zmybiax\\Zmybiax.csproj",
-        "packagesPath": "C:\\Users\\Bartek\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Bartek\\source\\repos\\Zmybiax\\Zmybiax\\obj\\",
+        "projectPath": "C:\\Users\\barte\\source\\repos\\Zmybiax\\Zmybiax\\Zmybiax.csproj",
+        "packagesPath": "C:\\Users\\barte\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\barte\\source\\repos\\Zmybiax\\Zmybiax\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\Bartek\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\barte\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -22,7 +22,7 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Users\\Bartek\\AppData\\Roaming\\Cosmos User Kit\\packages\\": {},
+          "C:\\Users\\barte\\AppData\\Roaming\\Cosmos User Kit\\packages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
