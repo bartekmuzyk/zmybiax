@@ -1,5 +1,9 @@
-﻿using System;
+﻿using Cosmos.System.Graphics;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Drawing;
+using Zmybiax.ZmybiaxGraphics;
 using Sys = Cosmos.System;
 
 namespace Zmybiax
@@ -113,6 +117,84 @@ namespace Zmybiax
                 }
             }
             return flags.ToArray();
+        }
+
+        /// <summary>
+        /// Splices a byte array every given number
+        /// </summary>
+        /// <param name="source">The source array</param>
+        /// <param name="every">Number of slices</param>
+        /// <returns>A list containing spliced byte arrays</returns>
+        public static List<byte[]> SpliceEvery(this byte[] source, ushort every)
+        {
+            List<byte[]> splicedArray = new List<byte[]>();
+            byte[] buffer = new byte[every];
+            int bi = 0;
+            for (int i = 0; i < source.Length; i++)
+            {
+                bi = i % every;
+                buffer[bi] = source[i];
+                if (bi == every - 1)
+                {
+                    splicedArray.Add(buffer);
+                    buffer = new byte[every];
+                }
+            }
+            return splicedArray;
+        }
+
+        /// <summary>
+        /// Splices a byte array with the given offset
+        /// </summary>
+        /// <param name="source">The source array</param>
+        /// <param name="offset">The offset</param>
+        /// <returns>A spliced array</returns>
+        public static byte[] Splice(this byte[] source, int offset)
+        {
+            byte[] result = new byte[source.Length - offset];
+            for (int i = 0; i < source.Length; i++)
+            {
+                if (i < offset)
+                {
+                    continue;
+                }
+                else
+                {
+                    result[i] = source[i];
+                }
+            }
+            return result;
+        }
+
+        public static void DrawText(this SVGAIICanvas canvas, string text, int x, int y, Font font)
+        {
+            char[] characters = text.ToCharArray();
+            int[] cursor = new int[] { x, y };
+            foreach (char c in characters)
+            {
+                byte[] charData = font.Characters[c];
+                int[] cursor2 = new int[] { 0, 0 };
+                for (short i = 0; i < charData.Length; i++)
+                {
+                    byte b = charData[i];
+                    if (b == 0xFF)
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        if (cursor2[0] > 20)
+                        {
+                            cursor2[0] = 0;
+                            cursor2[1]++;
+                        }
+                        int penX = cursor[0] + cursor2[0];
+                        int penY = cursor[1] + cursor2[1];
+                        canvas.DrawPoint(new Pen(Color.FromArgb((int)b, (int)b, (int)b)), penX, penY);
+                    }
+                }
+                cursor[0] += 20;
+            }
         }
     }
 }

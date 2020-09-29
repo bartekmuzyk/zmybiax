@@ -10,14 +10,16 @@ namespace Zmybiax.ZmybiaxGraphics
     class WindowManager
     {
         private SVGAIICanvas screen;
+        private FontManager fm;
         public int[] resolution = new int[2];
         public byte layout = 0x01;
         private Window[] windows = new Window[4];
         private List<Layer> layers = new List<Layer>();
 
-        public WindowManager(SVGAIICanvas canvas, byte layout = 0x01)
+        public WindowManager(SVGAIICanvas canvas, FontManager fm, byte layout = 0x01)
         {
             this.screen = canvas;
+            this.fm = fm;
             this.layout = layout;
 
             Console.WriteLine(canvas.DefaultGraphicMode);
@@ -56,7 +58,7 @@ namespace Zmybiax.ZmybiaxGraphics
         public void InitWindow(string title)
         {
             int freePos = GetNextFreePosition();
-            if (freePos == 0){ Console.WriteLine("freepos 0"); return; }
+            if (freePos == 0){ return; }
 
             Window window = new Window(this, title, (byte)freePos);
 
@@ -66,6 +68,30 @@ namespace Zmybiax.ZmybiaxGraphics
                 case 0x01:
                     this.screen.DrawFilledRectangle(new Pen(window.Background), 0, 0, boundaries[0], boundaries[1]);
                     this.screen.DrawFilledRectangle(new Pen(Color.DodgerBlue), 0, 0, boundaries[0], 33);
+                    this.screen.DrawText(title, 0, 0, this.fm.DefaultFont);
+                    break;
+                default:
+                    this.screen.DrawFilledRectangle(new Pen(window.Background), 0, 0, boundaries[0], boundaries[1]);
+                    this.screen.DrawFilledRectangle(new Pen(Color.DodgerBlue), 0, 0, boundaries[0], 33);
+                    break;
+
+            }
+        }
+
+        public void InitWindow(string title, Font font)
+        {
+            int freePos = GetNextFreePosition();
+            if (freePos == 0) { return; }
+
+            Window window = new Window(this, title, (byte)freePos);
+
+            int[] boundaries = window.GetBoundaries();
+            switch (window.Position)
+            {
+                case 0x01:
+                    this.screen.DrawFilledRectangle(new Pen(window.Background), 0, 0, boundaries[0], boundaries[1]);
+                    this.screen.DrawFilledRectangle(new Pen(Color.DodgerBlue), 0, 0, boundaries[0], 33);
+                    this.screen.DrawText(title, 0, 0, font);
                     break;
                 default:
                     this.screen.DrawFilledRectangle(new Pen(window.Background), 0, 0, boundaries[0], boundaries[1]);

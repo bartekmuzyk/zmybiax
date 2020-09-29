@@ -14,6 +14,7 @@ namespace Zmybiax.ZmybiaxGraphics
         private List<Object> objects = new List<Object>();
         public Color Background = Color.LightGray;
         private WindowManager wm;
+        private FontManager fm;
 
         public Window(WindowManager wm, string title, byte position)
         {
@@ -37,6 +38,10 @@ namespace Zmybiax.ZmybiaxGraphics
             {
                 case 0x01:
                     boundaries[0] = wm.resolution[0] / 2;
+                    boundaries[1] = wm.resolution[1] / 2;
+                    break;
+                case 0x02:
+                    boundaries[0] = wm.resolution[0] / 2 + 2;
                     boundaries[1] = wm.resolution[1] / 2;
                     break;
             }

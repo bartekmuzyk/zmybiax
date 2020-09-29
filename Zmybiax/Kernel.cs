@@ -252,7 +252,16 @@ namespace Zmybiax
                     case "wm":
                         Console.WriteLine("Uruchamianie sesji...");
                         SVGAIICanvas canvas = new SVGAIICanvas();
-                        WindowManager wm = new WindowManager(canvas);
+
+                        //Load the Monospace font and font manager
+                        FontManager fm = new FontManager();
+                        Font monospace = new Font(@"0:\system\monospace.zf", fm.AvailableCharacters);
+                        fm.LoadFont(monospace);
+                        fm.SetDefault(monospace);
+
+                        //Initialize the window manager
+                        WindowManager wm = new WindowManager(canvas, fm);
+
                         wm.InitWindow("Testowe okno");
                         var key = Console.ReadKey();
                         wm.Disable();

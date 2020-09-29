@@ -68,18 +68,22 @@ namespace Zmybiax.ZmybiaxGraphics
                 case ObjectType.Label:
                     this.BackgroundColor = Color.Transparent;
                     this.ForegroundColor = Color.Black;
+                    this.BorderSize = 0;
+                    this.BorderColor = Color.Transparent;
                     this.Value = "Label";
                     break;
                 case ObjectType.Button:
                     this.BackgroundColor = Color.DarkGray;
                     this.ForegroundColor = Color.White;
                     this.BorderSize = 1;
+                    this.BorderColor = Color.Black;
                     this.Value = "Button";
                     break;
                 case ObjectType.TextBox:
                     this.BackgroundColor = Color.White;
                     this.ForegroundColor = Color.Black;
                     this.BorderSize = 2;
+                    this.BorderColor = Color.Black;
                     this.Value = "TextBox";
                     break;
             }
