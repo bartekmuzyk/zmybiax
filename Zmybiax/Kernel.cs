@@ -1,6 +1,5 @@
 ﻿using Cosmos.Core.IOGroup;
 using Cosmos.Debug.Kernel;
-using Cosmos.HAL;
 using Cosmos.System.FileSystem;
 using Cosmos.System.FileSystem.Listing;
 using Cosmos.System.Graphics;
@@ -12,7 +11,7 @@ using System.Drawing;
 using System.IO;
 using System.Text;
 using Sys = Cosmos.System;
-using Zmybiax.ZmybiaxGraphics;
+using CGUI;
 
 namespace Zmybiax
 {
@@ -107,7 +106,8 @@ namespace Zmybiax
             Console.Clear();
             Console.BackgroundColor = ConsoleColor.Red;
             Console.ForegroundColor = ConsoleColor.White;
-            Console.WriteLine("Resetowanie do ustawien fabrycznych...");
+            Console.WriteLine("Przywracanie systemu do ustawien fabrycznych...");
+            Console.WriteLine("NIE WYLACZAJ KOMPUTERA");
             fs.DeleteDirectoryRecursively(@"0:\");
             Cosmos.System.Power.Shutdown();
         }
@@ -251,20 +251,9 @@ namespace Zmybiax
                         break;
                     case "wm":
                         Console.WriteLine("Uruchamianie sesji...");
-                        SVGAIICanvas canvas = new SVGAIICanvas();
-
-                        //Load the Monospace font and font manager
-                        FontManager fm = new FontManager();
-                        Font monospace = new Font(@"0:\system\monospace.zf", fm.AvailableCharacters);
-                        fm.LoadFont(monospace);
-                        fm.SetDefault(monospace);
-
-                        //Initialize the window manager
-                        WindowManager wm = new WindowManager(canvas, fm);
-
-                        wm.InitWindow("Testowe okno");
-                        var key = Console.ReadKey();
-                        wm.Disable();
+                        VGADriver driver = new VGADriver();
+                        WindowManager wm = new WindowManager(driver);
+                        wm.Init();
                         break;
                     default:
                         Console.ForegroundColor = ConsoleColor.Red;
