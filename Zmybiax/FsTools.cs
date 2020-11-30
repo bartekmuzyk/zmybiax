@@ -55,10 +55,7 @@ namespace Zmybiax
         public static string StringifyPath(this string[] source)
         {
             string final = "";
-            foreach (string part in source)
-            {
-                final = final + part + '\\';
-            }
+            foreach (string part in source) final = final + part + '\\';
             return final;
         }
 
@@ -67,13 +64,7 @@ namespace Zmybiax
             try
             {
                 DirectoryEntry entry = fs.GetDirectory(path);
-                if (entry.mEntryType == DirectoryEntryTypeEnum.Directory)
-                {
-                    return true;
-                } else
-                {
-                    return false;
-                }
+                return entry.mEntryType == DirectoryEntryTypeEnum.Directory;
             }
             catch (Exception)
             {
@@ -86,14 +77,7 @@ namespace Zmybiax
             try
             {
                 DirectoryEntry entry = fs.GetFile(path);
-                if (entry.mEntryType == DirectoryEntryTypeEnum.File)
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
+                return entry.mEntryType == DirectoryEntryTypeEnum.File;
             }
             catch (Exception)
             {
@@ -159,14 +143,8 @@ namespace Zmybiax
             List<DirectoryEntry> files = fs.GetDirectoryListing(aPath);
             foreach (DirectoryEntry file in files)
             {
-                if (file.mEntryType == DirectoryEntryTypeEnum.File)
-                {
-                    fs.DeleteFile(fs.GetFile(file.mFullPath));
-                }
-                else if (file.mEntryType == DirectoryEntryTypeEnum.Directory)
-                {
-                    fs.DeleteDirectoryRecursively(file.mFullPath);
-                }
+                if          (file.mEntryType == DirectoryEntryTypeEnum.File)        fs.DeleteFile(fs.GetFile(file.mFullPath));
+                else if     (file.mEntryType == DirectoryEntryTypeEnum.Directory)   fs.DeleteDirectoryRecursively(file.mFullPath);
             }
         }
     }

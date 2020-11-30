@@ -106,6 +106,9 @@
       <Reference Include="CGUI">
         <HintPath>..\..\..\..\Documents\CGUI\CGUI.dll</HintPath>
       </Reference>
+      <Reference Include="System.Drawing">
+        <HintPath>..\..\..\..\Downloads\System.Drawing\System.Drawing.dll</HintPath>
+      </Reference>
     </ItemGroup>
 
 </Project>

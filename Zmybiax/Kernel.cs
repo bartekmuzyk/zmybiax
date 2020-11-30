@@ -25,6 +25,7 @@ namespace Zmybiax
 
         private void Setup()
         {
+            Registry.Storage.AddEntry("COMPILATION", typeof(int), "1");
             Console.WriteLine("                      ___.   .__               ");
             Console.WriteLine("________ _____ ___.__.\\_ |__ |__|____  ___  ___");
             Console.WriteLine("\\___   //     <   |  | | __ \\|  \\__  \\ \\  \\/  /");
@@ -123,10 +124,7 @@ namespace Zmybiax
                     case "factory":
                         Console.Write("UWAGA! Ta operacja zniszczy wszystkie pliki konfiguracyjne oraz dokumenty uzytkownika! Jestes pewien? (Y/n): ");
                         var choice = Console.ReadLine();
-                        if (choice == "Y" || choice == "y")
-                        {
-                            Factory();
-                        }
+                        if (choice == "Y" || choice == "y") Factory();
                         break;
                     case "ls":
                         if (tokens.Length > 1)
@@ -178,52 +176,6 @@ namespace Zmybiax
                             path = userPath;
                         }
                         break;
-                    case "loc":
-                        if (tokens.Length > 1)
-                        {
-                            if (tokens[1].ToCharArray()[1] == ':')
-                            {
-                                //The path is already absolute
-                                Console.WriteLine(tokens[1]);
-                            }
-                            else
-                            {
-                                switch (tokens[1])
-                                {
-                                    case "..":
-                                        string[] parentDir = path.Pop();
-                                        Console.WriteLine(parentDir.StringifyPath());
-                                        break;
-                                    case ".":
-                                        Console.WriteLine(path.StringifyPath());
-                                        break;
-                                    default:
-                                        if (tokens[1].StartsWith('\\'))
-                                        {
-                                            Console.WriteLine("Zla sciezka.");
-                                        }
-                                        else
-                                        {
-                                            string pathToCheck = path.StringifyPath() + tokens[1];
-                                            if (fs.DirectoryExists(pathToCheck) || fs.FileExists(pathToCheck))
-                                            {
-                                                Console.WriteLine(pathToCheck);
-                                            }
-                                            else
-                                            {
-                                                Console.WriteLine("Plik/folder " + pathToCheck + " nie istnieje.");
-                                            }
-                                        }
-                                        break;
-                                }
-                            }
-                        }
-                        else
-                        {
-                            Console.WriteLine("loc - Wyswietla pelna sciezke do folderu/pliku.");
-                            Console.WriteLine("Uzycie: loc <relatywa/sciezka/do/elementu>");
-                        }
-                        break;
                     case "power":
                         if (tokens.Length > 1)
                         {
@@ -249,11 +201,13 @@ namespace Zmybiax
                             Console.WriteLine("\t-r - Restartuje komputer");
                         }
                         break;
-                    case "wm":
+                    case "zwm":
                         Console.WriteLine("Uruchamianie sesji...");
-                        VGADriver driver = new VGADriver();
-                        WindowManager wm = new WindowManager(driver);
+                        WindowManager wm = new WindowManager(800, 600);
                         wm.Init();
+                        break;
+                    case "reg":
+                        Builtins.reg();
                         break;
                     default:
                         Console.ForegroundColor = ConsoleColor.Red;
