@@ -1,55 +1,68 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Drw = System.Drawing;
+using System.Drawing;
 using Sys = Cosmos.System;
-using CGUI;
+using Cosmos.System.Graphics;
+using Cosmos.Debug.Kernel;
+using IL2CPU.API.Attribs;
 
-namespace Zmybiax
+namespace Zmybiax.Graphics
 {
-    class WindowManager
+    public class WindowManager
     {
-        private VGADriver driver;
+        private VideoDriver driver;
         public int[] Resolution = new int[2];
-        private List<Screen> screens = new List<Screen>() { new Screen() };
-        const byte DEFAULT_SCREEN = 0;
-        private bool switchMode = false;
-        private string wallpaper;
+        private bool RUN = true;
+        private List<Shortcut> desktopShortcuts = new List<Shortcut>();
 
-        public WindowManager(int width, int height, string wallpaper = "")
+        public Random random = new Random();
+
+        public WindowManager(int width, int height)
         {
             this.Resolution[0] = width;
             this.Resolution[1] = height;
-            this.driver = new VGADriver(width, height);
-            this.wallpaper = wallpaper;
+            this.driver = new VideoDriver(width, height, false, () => { });
+            Sys.MouseManager.ScreenWidth = (uint)width;
+            Sys.MouseManager.ScreenHeight = (uint)height;
         }
 
-        private void ReRender(byte screenIndex)
-        {
-            this.driver.RenderScreen(this.screens[screenIndex]);
-        }
+        private void QUIT() { this.RUN = false; }
 
-        private void AddControl(Control item, byte screenIndex = DEFAULT_SCREEN)
+        private void DrawLoop(ref Screen screen, ulong frame)
         {
-            this.screens[screenIndex].Controls.Add(item);
-            ReRender(screenIndex);
-        }
+            Label timeControl = new Label($"00:{frame.ToString()}", 0, 0, Color.White);
+            screen.AddControl(timeControl);
 
-        private void AddControl(Control[] items, byte screenIndex = DEFAULT_SCREEN)
-        {
-            foreach (Control item in items) this.screens[screenIndex].Controls.Add(item);
-            ReRender(screenIndex);
+            Rectangle testRect = new Rectangle(Color.Red, 60, 40, 300, 200, false);
+            screen.AddControl(testRect);
+
+            if (frame > 20000)
+            {
+                Circle testCircle = new Circle(Color.DodgerBlue, 20, 20, 20, true);
+                screen.AddControl(testCircle);
+            }
+
+            if (frame > 80000) QUIT();
         }
 
         public void Init()
         {
-            Control[] explorer = new Control[]
-            {
-                new CGUI.Rectangle(0, 0, this.Resolution[0], 18, Drw.Color.White),
-                new Label("00:00:00", Drw.Color.Black, 1, 1)
-            };
+            Screen screen = new Screen(Color.Black);
+            this.driver.SetRenderCallback(screen.RenderCallback);
+            this.driver.Screens.Add(screen);
+            DrawLoop(ref screen, 0);
+            this.driver.Render(true);
 
-            AddControl(explorer);
+            ulong frame = 1;
+            do
+            {
+                DrawLoop(ref screen, frame);
+                this.driver.Render();
+                frame++;
+            } while (this.RUN);
+
+            this.driver.Disable();
         }
     }
 }

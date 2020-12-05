@@ -16,7 +16,6 @@ namespace Zmybiax
         /// <returns>The new modified array</returns>
         public static string[] Pop(this string[] source)
         {
-            //Can't use Linq :(
             int lastIndex = source.Length - 1;
             string[] newArray = new string[lastIndex];
             for (int i = 0; i < source.Length; i++)
@@ -42,7 +41,7 @@ namespace Zmybiax
             Console.ForegroundColor = foreground;
             Console.Write(text);
             Console.ForegroundColor = originalFg;
-            if (endl) { Console.Write(Environment.NewLine); }
+            if (endl) Console.Write(Environment.NewLine);
         }
 
         /// <summary>
@@ -61,24 +60,7 @@ namespace Zmybiax
             Console.Write(text);
             Console.ForegroundColor = originalFg;
             Console.BackgroundColor = originalBg;
-            if (endl) { Console.Write(Environment.NewLine); }
-        }
-
-        /// <summary>
-        /// Convert string to a character array
-        /// </summary>
-        /// <param name="source">Source string</param>
-        /// <returns>A char array</returns>
-        public static char[] ToCharArray(this string source)
-        {
-            char[] chars = new char[source.Length];
-            int i = 0;
-            foreach (char c in source)
-            {
-                chars[i] = c;
-                i++;
-            }
-            return chars;
+            if (endl) Console.Write(Environment.NewLine);
         }
 
         /// <summary>
@@ -91,10 +73,7 @@ namespace Zmybiax
         {
             int len = source.Length;
             string[] final = new string[len + 1];
-            for (int i = 0; i < len; i++)
-            {
-                final[i] = source[i];
-            }
+            for (int i = 0; i < len; i++) final[i] = source[i];
             final[len - 1] = element;
             return final;
         }
@@ -108,61 +87,29 @@ namespace Zmybiax
         {
             string[] tokens = instruction.Split(' ');
             List<char> flags = new List<char>(tokens.Length - 1);
+
             foreach (string token in tokens)
-            {
-                if (token[0] == detector && token.Length < 2)
-                {
+                if (token[0] == detector && token.Length < 3)
                     flags.Add(token[1]);
-                }
-            }
+
             return flags.ToArray();
         }
 
-        /// <summary>
-        /// Splices a byte array every given number
-        /// </summary>
-        /// <param name="source">The source array</param>
-        /// <param name="every">Number of slices</param>
-        /// <returns>A list containing spliced byte arrays</returns>
-        public static List<byte[]> SpliceEvery(this byte[] source, ushort every)
+        public static byte[] SubArray(this byte[] source, int start)
         {
-            List<byte[]> splicedArray = new List<byte[]>();
-            byte[] buffer = new byte[every];
-            int bi = 0;
-            for (int i = 0; i < source.Length; i++)
-            {
-                bi = i % every;
-                buffer[bi] = source[i];
-                if (bi == every - 1)
-                {
-                    splicedArray.Add(buffer);
-                    buffer = new byte[every];
-                }
-            }
-            return splicedArray;
+            int length = source.Length - start;
+            List<byte> subarray = new List<byte>(length);
+            int end = start + length;
+            for (int i = start; i < end; i++) subarray.Add(source[i]);
+            return subarray.ToArray();
         }
 
-        /// <summary>
-        /// Splices a byte array with the given offset
-        /// </summary>
-        /// <param name="source">The source array</param>
-        /// <param name="offset">The offset</param>
-        /// <returns>A spliced array</returns>
-        public static byte[] Splice(this byte[] source, int offset)
+        public static byte[] SubArray(this byte[] source, int start, int length)
         {
-            byte[] result = new byte[source.Length - offset];
-            for (int i = 0; i < source.Length; i++)
-            {
-                if (i < offset)
-                {
-                    continue;
-                }
-                else
-                {
-                    result[i] = source[i];
-                }
-            }
-            return result;
+            List<byte> subarray = new List<byte>(length);
+            int end = start + length;
+            for (int i = start; i < end; i++) subarray.Add(source[i]);
+            return subarray.ToArray();
         }
     }
 }

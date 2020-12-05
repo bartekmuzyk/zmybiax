@@ -11,7 +11,8 @@ using System.Drawing;
 using System.IO;
 using System.Text;
 using Sys = Cosmos.System;
-using CGUI;
+using IL2CPU.API.Attribs;
+using Zmybiax.Graphics;
 
 namespace Zmybiax
 {
@@ -25,79 +26,57 @@ namespace Zmybiax
 
         private void Setup()
         {
-            Registry.Storage.AddEntry("COMPILATION", typeof(int), "1");
+            Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine("                      ___.   .__               ");
+            Console.ForegroundColor = ConsoleColor.DarkYellow;
             Console.WriteLine("________ _____ ___.__.\\_ |__ |__|____  ___  ___");
+            Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine("\\___   //     <   |  | | __ \\|  \\__  \\ \\  \\/  /");
+            Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine(" /    /|  Y Y /\\___  | | \\_\\ \\  |/ __ \\_>    < ");
+            Console.ForegroundColor = ConsoleColor.Blue;
             Console.WriteLine("/_____ \\__|_|  / ____| |___  /__(____  /__/\\_ \\");
+            Console.ForegroundColor = ConsoleColor.Magenta;
             Console.WriteLine("      \\/     \\/\\/          \\/        \\/      \\/");
-            bool systemTest = fs.DirectoryExists(@"0:\system");
-            //bool systemTest = false;
-            if (!systemTest)
+            Console.ForegroundColor = ConsoleColor.White;
+            
+            bool userTest = fs.DirectoryExists(@"0:\user");
+            if (!userTest)
             {
-                fs.CreateDirectory(@"0:\system");
-                Console.WriteLine("Przygotowywanie systemu...");
-                fs.CreateFile(@"0:\system\startup.cmd");
-                fs.WriteFile(@"0:\system\startup.cmd", "# Put your commands you want to run at startup here!");
-                fs.CreateDirectory(@"0:\user");
-                fs.CreateDirectory(@"0:\applications");
-                fs.CreateDirectory(@"0:\config");
-                fs.CreateDirectory(@"0:\services");
-                Console.WriteLine("Utworz uzytkownika:");
-                Console.Write("Nazwa uzytkownika: ");
-                var username = Console.ReadLine();
-                fs.CreateDirectory(@"0:\user\" + username);
-                Console.WriteLine("Gotowe! System zostanie ponownie uruchomiony.");
-                Cosmos.System.Power.Reboot();
+                Console.WriteLine("Nie znaleziono zadnych uzytkownikow. Zostales zalogowany na tymczasowe konto.");
+                user = "anon";
+                path = new string[] { "0:" };
             }
             else
             {
-                bool userTest = fs.DirectoryExists(@"0:\user");
-                if (!userTest)
-                {
-                    Console.WriteLine("Nie znaleziono zadnych uzytkownikow. Zostales zalogowany na tymczasowe konto.");
-                    user = "anon";
-                    path = new string[] { "0:" };
-                }
-                else
-                {
-                    List<DirectoryEntry> users = fs.GetDirectoryListing(@"0:\user");
-                    Console.WriteLine("Uzytkownicy:");
-                    Console.ForegroundColor = ConsoleColor.DarkBlue;
-                    foreach (DirectoryEntry user in users)
-                    {
-                        Console.WriteLine(" * " + user.mName);
-                    }
-                    Console.ForegroundColor = ConsoleColor.White;
+                List<DirectoryEntry> users = fs.GetDirectoryListing(@"0:\user");
+                Console.WriteLine("Uzytkownicy:");
+                Console.ForegroundColor = ConsoleColor.DarkBlue;
+                foreach (DirectoryEntry user in users) Console.WriteLine(" * " + user.mName);
+                Console.ForegroundColor = ConsoleColor.White;
 
-                    bool retry = true;
-                    while (retry)
+                bool retry = true;
+                while (retry)
+                {
+                    Console.Write("Nazwa uzytkownika: ");
+                    var username = Console.ReadLine();
+                    bool found = false;
+                    foreach (DirectoryEntry userDir in users)
                     {
-                        Console.Write("Nazwa uzytkownika: ");
-                        var username = Console.ReadLine();
-                        bool found = false;
-                        foreach (DirectoryEntry userDir in users)
+                        if (userDir.mName == username && userDir.mEntryType == DirectoryEntryTypeEnum.Directory)
                         {
-                            if (userDir.mName == username && userDir.mEntryType == DirectoryEntryTypeEnum.Directory)
-                            {
-                                found = true;
-                                break;
-                            }
-                        }
-
-                        if (!found)
-                        {
-                            Console.WriteLine("Uzytkownik " + username + " nie istnieje.");
-                        }
-                        else
-                        {
-                            user = username;
-                            userPath = new string[] { "0:", "user", user };
-                            path = userPath;
-                            retry = false;
+                            found = true;
+                            break;
                         }
                     }
+
+                    if (found)
+                    {
+                        user = username;
+                        userPath = new string[] { "0:", "user", user };
+                        path = userPath;
+                        retry = false;
+                    } else Console.WriteLine("Uzytkownik " + username + " nie istnieje.");
                 }
             }
         }
@@ -203,7 +182,7 @@ namespace Zmybiax
                         break;
                     case "zwm":
                         Console.WriteLine("Uruchamianie sesji...");
-                        WindowManager wm = new WindowManager(800, 600);
+                        WindowManager wm = new WindowManager(800, 640);
                         wm.Init();
                         break;
                     case "reg":
