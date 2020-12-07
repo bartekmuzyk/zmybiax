@@ -92,7 +92,7 @@ namespace Zmybiax
             Cosmos.System.Power.Shutdown();
         }
 
-        private void interpretCmd(string cmd)
+        private void InterpretCommandLine(string cmd)
         {
             string[] tokens = cmd.Split(' ');
             char[] flags = cmd.GetFlags('-');
@@ -107,13 +107,9 @@ namespace Zmybiax
                         break;
                     case "ls":
                         if (tokens.Length > 1)
-                        {
                             fs.GetDirectoryListing(tokens[1]).DisplayEntries(tokens[1]);
-                        }
                         else
-                        {
                             fs.GetDirectoryListing(path.StringifyPath()).DisplayEntries(path.StringifyPath());
-                        }
                         break;
                     case "cd":
                         if (tokens.Length > 1)
@@ -124,8 +120,8 @@ namespace Zmybiax
                                     path = userPath;
                                     break;
                                 case "..":
-                                    if (path.Length > 1) { path = path.Pop(); }
-                                    else { Console.WriteLine("Brak nadrzednego folderu."); }
+                                    if (path.Length > 1) path = path.Pop();
+                                    else Console.WriteLine("Brak nadrzednego folderu.");
                                     break;
                                 case ".":
                                     break;
@@ -150,10 +146,7 @@ namespace Zmybiax
                                     break;
                             }
                         }
-                        else
-                        {
-                            path = userPath;
-                        }
+                        else path = userPath;
                         break;
                     case "power":
                         if (tokens.Length > 1)
@@ -173,11 +166,13 @@ namespace Zmybiax
                         }
                         else
                         {
-                            Console.WriteLine("power - Wylacz lub zresetuj komputer.");
-                            Console.WriteLine("Uzycie: power [OPCJE]");
-                            Console.WriteLine("Opcje:");
-                            Console.WriteLine("\t-s - Wylacza komputer");
-                            Console.WriteLine("\t-r - Restartuje komputer");
+                            Console.WriteLine(
+                                "power - Wylacz lub zresetuj komputer.\n" +
+                                "Uzycie: power [OPCJE]\n" +
+                                "Opcje:\n" +
+                                "\t-s - Wylacza komputer\n" +
+                                "\t-r - Restartuje komputer"
+                                );
                         }
                         break;
                     case "zwm":
@@ -217,7 +212,7 @@ namespace Zmybiax
                 Console.ForegroundColor = ConsoleColor.White;
                 Console.Write(" >>");
                 var cmd = Console.ReadLine();
-                interpretCmd(cmd);
+                InterpretCommandLine(cmd);
             }
             catch (Exception e)
             {

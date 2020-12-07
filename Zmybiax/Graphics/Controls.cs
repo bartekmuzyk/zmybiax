@@ -22,6 +22,8 @@ namespace Zmybiax.Graphics
         internal int X { get; set; }
         internal int Y { get; set; }
         public Color Color;
+        public bool ModifiedSinceLastRender = true;
+
         internal bool CheckBaseEquality(Control c)
         {
             return
@@ -30,14 +32,19 @@ namespace Zmybiax.Graphics
                 (this.Y == c.Y) &&
                 (this.Color == c.Color);
         }
+
+        public void Update()
+        {
+            this.ModifiedSinceLastRender = true;
+        }
     }
 
     //Control classess
 
     public class Line : Control
     {
-        internal int EndX { get; set; }
-        internal int EndY { get; set; }
+        public int EndX { get; set; }
+        public int EndY { get; set; }
 
         public Line(Color color, int startx, int starty, int endx, int endy)
         {
@@ -59,8 +66,8 @@ namespace Zmybiax.Graphics
 
     public class Rectangle : Control
     {
-        internal int Width { get; set; }
-        internal int Height { get; set; }
+        public int Width { get; set; }
+        public int Height { get; set; }
         public bool Filled;
 
         public Rectangle(Color color, int x, int y, int width, int height, bool filled)
@@ -85,8 +92,8 @@ namespace Zmybiax.Graphics
 
     public class Circle : Control
     {
-        internal int RadiusX { get; set; }
-        internal int RadiusY { get; set; }
+        public int RadiusX { get; set; }
+        public int RadiusY { get; set; }
         public bool Filled;
 
         public Circle(Color color, int centerX, int centerY, int radius, bool filled)
@@ -123,22 +130,26 @@ namespace Zmybiax.Graphics
     public class Label : Control
     {
         public string Text;
+        public Color Background;
 
-        public Label(string text, int x, int y, Color color)
+        public Label(string text, int x, int y, Color background, Color color)
         {
             this.Type = ControlType.Label;
             this.Text = text;
             this.X = x;
             this.Y = y;
             this.Color = color;
+            this.Background = background;
         }
 
-        public Label(string text, int x, int y)
+        public Label(string text, int x, int y, Color background)
         {
             this.Type = ControlType.Label;
             this.Text = text;
             this.X = x;
             this.Y = y;
+            this.Color = Color.White;
+            this.Background = background;
         }
 
         public bool Equals(Label c)

@@ -15,54 +15,61 @@ namespace Zmybiax.Graphics
         public int[] Resolution = new int[2];
         private bool RUN = true;
         private List<Shortcut> desktopShortcuts = new List<Shortcut>();
-
-        public Random random = new Random();
+        private Color bg = Color.Black;
 
         public WindowManager(int width, int height)
         {
             this.Resolution[0] = width;
             this.Resolution[1] = height;
-            this.driver = new VideoDriver(width, height, false, () => { });
+            this.driver = new VideoDriver(width, height);
             Sys.MouseManager.ScreenWidth = (uint)width;
             Sys.MouseManager.ScreenHeight = (uint)height;
         }
 
         private void QUIT() { this.RUN = false; }
 
-        private void DrawLoop(ref Screen screen, ulong frame)
-        {
-            Label timeControl = new Label($"00:{frame.ToString()}", 0, 0, Color.White);
-            screen.AddControl(timeControl);
-
-            Rectangle testRect = new Rectangle(Color.Red, 60, 40, 300, 200, false);
-            screen.AddControl(testRect);
-
-            if (frame > 20000)
-            {
-                Circle testCircle = new Circle(Color.DodgerBlue, 20, 20, 20, true);
-                screen.AddControl(testCircle);
-            }
-
-            if (frame > 80000) QUIT();
-        }
+        
 
         public void Init()
         {
-            Screen screen = new Screen(Color.Black);
-            this.driver.SetRenderCallback(screen.RenderCallback);
-            this.driver.Screens.Add(screen);
-            DrawLoop(ref screen, 0);
-            this.driver.Render(true);
-
+            Screen screen = new Screen(this.bg);
+            this.driver.Clear(this.bg);
+            BeforeDrawLoop(ref screen);
             ulong frame = 1;
             do
             {
                 DrawLoop(ref screen, frame);
-                this.driver.Render();
+                this.driver.RenderScreen(screen);
+                //screen.ClearControls();
                 frame++;
             } while (this.RUN);
-
             this.driver.Disable();
+        }
+
+        private void BeforeDrawLoop(ref Screen screen)
+        {
+            Label frames = new Label("before draw loop", 0, 0, Color.Black, Color.White);
+            screen.AddControl(frames);
+            Rectangle box = new Rectangle(Color.Gray, 50, 50, 300, 200, true);
+            screen.AddControl(box);
+            Rectangle titlebar = new Rectangle(Color.Blue, 50, 50, 300, 16, true);
+            screen.AddControl(titlebar);
+            Label title = new Label("Ostrzezenie", 50, 50, Color.Blue, Color.White);
+            screen.AddControl(title);
+        }
+
+        private void DrawLoop(ref Screen screen, ulong frame)
+        {
+            ((Label)(screen.Controls[0])).Text = $"frame no. {frame}";
+            screen.Controls[0].Update();
+
+            if (frame > 500)
+            {
+                Circle testCircle = new Circle(Color.White, 20, 80, 20, true);
+                screen.AddControl(testCircle);
+            }
+
+            if (frame > 1000) QUIT();
         }
     }
 }

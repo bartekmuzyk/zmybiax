@@ -8,58 +8,43 @@ using System.Drawing;
 
 namespace Zmybiax.Graphics
 {
+    public enum RenderEventType
+    {
+        Draw,
+        Undraw
+    }
+
+    public class RenderEvent
+    {
+        public RenderEventType Type;
+        public List<Control> Data;
+
+        public RenderEvent(RenderEventType eventType, List<Control> data)
+        {
+            this.Type = eventType;
+            this.Data = data;
+        }
+    }
+
     public class VideoDriver
     {
         private Canvas canvas;
-        private Color[] pixelBuffer;
         public int[] Resolution = new int[2];
-        public List<Screen> Screens = new List<Screen>();
-        private Action renderCallback;
+        private int previousControlsCount = 0;
 
-        public VideoDriver(int width, int height, bool transparency, Action renderCallback)
+        public VideoDriver(int width, int height)
         {
-            ColorDepth driverDepth = transparency ? ColorDepth.ColorDepth32 : ColorDepth.ColorDepth24;
             this.canvas = FullScreenCanvas.GetFullScreenCanvas();
             this.Resolution = new int[] { width, height };
-            this.pixelBuffer = new Color[(width * height) + width];
-            this.renderCallback = renderCallback;
-        }
-
-        public void SetRenderCallback(Action callback)
-        {
-            this.renderCallback = callback;
         }
 
         public void Disable() { this.canvas.Disable(); }
 
-        #region buffer methods
-        public void SetBufferPixel(int x, int y, Color c)
-        {
-            if (x > this.Resolution[0] || y > this.Resolution[1]) return;
-            this.pixelBuffer[(x * y) + x] = c;
-        }
+        public void SetPixel(int x, int y, Color c) { canvas.DrawPoint(new Pen(c), x, y); }
 
-        public void ClearBuffer(Color c)
+        private void RenderControls(List<Control> collection)
         {
-            for (int i = 0; i < this.pixelBuffer.Length; i++) this.pixelBuffer[i] = c;
-        }
-
-        public void DrawBuffer()
-        {
-            this.canvas.DrawArray(this.pixelBuffer, 0, 0, this.Resolution[0], this.Resolution[1]);
-        }
-        #endregion
-
-        public void SetPixel(int x, int y, Color c)
-        {
-            canvas.DrawPoint(new Pen(c), x, y);
-        }
-
-        private void RenderScreen(Screen screen, bool force)
-        {
-            if (!screen.NeedsRendering && !force) return;
-            this.canvas.Clear(screen.Background);
-            foreach (Control control in screen.Controls)
+            foreach (Control control in collection)
             {
                 #region rendering
                 Pen pen = new Pen(control.Color);
@@ -74,9 +59,9 @@ namespace Zmybiax.Graphics
                     case ControlType.Rectangle:
                         Rectangle rect = (Rectangle)control;
                         if (rect.Filled)
-                            this.canvas.DrawFilledRectangle(pen, x, y, x + rect.Width, x + rect.Height);
+                            this.canvas.DrawFilledRectangle(pen, x, y, rect.Width, rect.Height);
                         else
-                            this.canvas.DrawRectangle(pen, x, y, x + rect.Width, x + rect.Height);
+                            this.canvas.DrawRectangle(pen, x, y, rect.Width, rect.Height);
                         break;
                     case ControlType.Circle:
                         Circle circle = (Circle)control;
@@ -93,17 +78,36 @@ namespace Zmybiax.Graphics
                         break;
                     case ControlType.Label:
                         Label label = (Label)control;
+                        this.canvas.DrawFilledRectangle(new Pen(label.Background), x, y, label.Text.Length * 8, 16);
                         this.canvas.DrawString(label.Text, PCScreenFont.Default, pen, x, y);
                         break;
                 }
+                control.ModifiedSinceLastRender = false;
                 #endregion
             }
-            this.renderCallback();
         }
 
-        public void Render(bool force = false)
+        public void RenderScreen(Screen screen)
         {
-            foreach (Screen screen in this.Screens) RenderScreen(screen, force);
+            RenderEvent e = screen.WhichToRender(this.previousControlsCount);
+            if (e.Type == RenderEventType.Draw)
+                RenderControls(e.Data);
+            else if (e.Type == RenderEventType.Undraw)
+            {
+                Clear(screen.Background);
+                RenderControls(screen.Controls);
+            }
+            this.previousControlsCount = screen.Controls.Count;
+        }
+
+        public void Clear(Color c)
+        {
+            this.canvas.Clear(c);
+        }
+
+        public void Clear(Color c, int startx, int starty, int endx, int endy)
+        {
+            this.canvas.DrawFilledRectangle(new Pen(c), startx, starty, endx - startx, endy - starty);
         }
     }
 }

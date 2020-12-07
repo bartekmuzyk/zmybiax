@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using Sys = Cosmos.System;
+using Zmybiax.Graphics;
 
 namespace Zmybiax
 {
@@ -30,40 +31,6 @@ namespace Zmybiax
         }
 
         /// <summary>
-        /// Write colored text with custom foreground color in the console
-        /// </summary>
-        /// <param name="text">Text to be written</param>
-        /// <param name="foreground">Text color</param>
-        /// <param name="endl">To write a new line after the text</param>
-        public static void WriteColored(string text, ConsoleColor foreground, bool endl)
-        {
-            ConsoleColor originalFg = Console.ForegroundColor;
-            Console.ForegroundColor = foreground;
-            Console.Write(text);
-            Console.ForegroundColor = originalFg;
-            if (endl) Console.Write(Environment.NewLine);
-        }
-
-        /// <summary>
-        /// Write colored text with custom foreground and background in the console
-        /// </summary>
-        /// <param name="text">Text to be written</param>
-        /// <param name="foreground">Text color</param>
-        /// <param name="background">Background color</param>
-        /// <param name="endl">To write a new line after the text</param>
-        public static void WriteColored(string text, ConsoleColor foreground, ConsoleColor background, bool endl)
-        {
-            ConsoleColor originalFg = Console.ForegroundColor;
-            ConsoleColor originalBg = Console.BackgroundColor;
-            Console.ForegroundColor = foreground;
-            Console.BackgroundColor = background;
-            Console.Write(text);
-            Console.ForegroundColor = originalFg;
-            Console.BackgroundColor = originalBg;
-            if (endl) Console.Write(Environment.NewLine);
-        }
-
-        /// <summary>
         /// Add an element to a string array
         /// </summary>
         /// <param name="source">Source string array</param>
@@ -77,6 +44,7 @@ namespace Zmybiax
             final[len - 1] = element;
             return final;
         }
+
         /// <summary>
         /// Get flags that were applied for a specific command
         /// </summary>
@@ -95,21 +63,22 @@ namespace Zmybiax
             return flags.ToArray();
         }
 
-        public static byte[] SubArray(this byte[] source, int start)
+        private static List<Control> FindAllControlsThatWereModifiedSinceLastRender(List<Control> collection)
         {
-            int length = source.Length - start;
-            List<byte> subarray = new List<byte>(length);
-            int end = start + length;
-            for (int i = start; i < end; i++) subarray.Add(source[i]);
-            return subarray.ToArray();
+            List<Control> result = new List<Control>(collection.Count);
+            foreach (Control control in collection)
+                if (control.ModifiedSinceLastRender) result.Add(control);
+            result.TrimExcess();
+            return result;
         }
 
-        public static byte[] SubArray(this byte[] source, int start, int length)
+        public static RenderEvent WhichToRender(this Screen screen, int previousControlCount)
         {
-            List<byte> subarray = new List<byte>(length);
-            int end = start + length;
-            for (int i = start; i < end; i++) subarray.Add(source[i]);
-            return subarray.ToArray();
+            int countDifference = screen.Controls.Count - previousControlCount;
+            if (countDifference >= 0)
+                return new RenderEvent(RenderEventType.Draw, FindAllControlsThatWereModifiedSinceLastRender(screen.Controls));
+            else
+                return new RenderEvent(RenderEventType.Undraw, new List<Control>(0));
         }
     }
 }

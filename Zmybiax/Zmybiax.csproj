@@ -58,6 +58,21 @@
         <VMware_Name>ISO User 001</VMware_Name>
         <User001_Description>Use VMware Player or Workstation to deploy and debug.</User001_Description>
         <ISO_Description>Creates a bootable ISO image which can be burned to a DVD. After running the selected project, an explorer window will open containing the ISO file. The ISO file can then be burned to a CD or DVD and used to boot a physical or virtual system.</ISO_Description>
+        <PXE_StackCorruptionDetectionEnabled>True</PXE_StackCorruptionDetectionEnabled>
+        <PXE_StackCorruptionDetectionLevel>MethodFooters</PXE_StackCorruptionDetectionLevel>
+        <PXE_Name>ISO User 001</PXE_Name>
+        <PXE_Description>Creates a PXE setup and hosts a DCHP and TFTP server to deploy directly to physical hardware. Allows debugging with a serial cable.</PXE_Description>
+        <PXE_Deployment>PXE</PXE_Deployment>
+        <PXE_Launch>None</PXE_Launch>
+        <PXE_DebugEnabled>False</PXE_DebugEnabled>
+        <PXE_DebugMode>Source</PXE_DebugMode>
+        <PXE_IgnoreDebugStubAttribute>False</PXE_IgnoreDebugStubAttribute>
+        <PXE_CosmosDebugPort>Serial: COM1</PXE_CosmosDebugPort>
+        <PXE_VisualStudioDebugPort>Pipe: Cosmos\Serial</PXE_VisualStudioDebugPort>
+        <PXE_PxeInterface>192.168.0.8</PXE_PxeInterface>
+        <PXE_EnableGDB>False</PXE_EnableGDB>
+        <PXE_StartCosmosGDB>False</PXE_StartCosmosGDB>
+        <PXE_ISOFile>bin\Debug\netcoreapp2.0\cosmos\Zmybiax.iso</PXE_ISOFile>
     </PropertyGroup>
 
     <PropertyGroup>
@@ -65,8 +80,8 @@
         <StartCosmosGDB>False</StartCosmosGDB>
         <VisualStudioDebugPort>Pipe: Cosmos\Serial</VisualStudioDebugPort>
         <CosmosDebugPort>Serial: COM1</CosmosDebugPort>
-        <Launch>VMware</Launch>
-        <Profile>VMware</Profile>
+        <Launch>None</Launch>
+        <Profile>User001</Profile>
         <Description>Use VMware Player or Workstation to deploy and debug.</Description>
         <PxeInterface>192.168.0.8</PxeInterface>
     </PropertyGroup>
