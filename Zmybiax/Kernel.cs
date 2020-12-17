@@ -177,11 +177,14 @@ namespace Zmybiax
                         break;
                     case "zwm":
                         Console.WriteLine("Uruchamianie sesji...");
-                        WindowManager wm = new WindowManager(800, 640);
+                        WindowManager wm = new WindowManager();
                         wm.Init();
                         break;
                     case "reg":
                         Builtins.reg();
+                        break;
+                    case "mousetest":
+                        Builtins.mousetest();
                         break;
                     default:
                         Console.ForegroundColor = ConsoleColor.Red;

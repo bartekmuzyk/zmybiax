@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Sys = Cosmos.System;
 
 namespace Zmybiax
 {
@@ -61,6 +62,18 @@ namespace Zmybiax
                 }
                 else if (key == "quit") RUN = false;
                 else Console.WriteLine($"Klucz '{key}' nie istnieje.");
+            }
+        }
+
+        public static void mousetest()
+        {
+            Console.WriteLine("Test urzadzenia wskazujacego.");
+            Sys.MouseManager.ScreenWidth = (uint)Console.WindowWidth;
+            Sys.MouseManager.ScreenHeight = (uint)Console.WindowHeight;
+            while (true)
+            {
+                Console.CursorLeft = (int)Sys.MouseManager.X;
+                Console.CursorTop = (int)Sys.MouseManager.Y;
             }
         }
     }

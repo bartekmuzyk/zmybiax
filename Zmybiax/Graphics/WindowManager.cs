@@ -5,71 +5,67 @@ using System.Drawing;
 using Sys = Cosmos.System;
 using Cosmos.System.Graphics;
 using Cosmos.Debug.Kernel;
-using IL2CPU.API.Attribs;
 
 namespace Zmybiax.Graphics
 {
     public class WindowManager
     {
         private VideoDriver driver;
-        public int[] Resolution = new int[2];
         private bool RUN = true;
         private List<Shortcut> desktopShortcuts = new List<Shortcut>();
-        private Color bg = Color.Black;
+        private Color bg = Color.Aqua;
+        private System.Drawing.Point mousePos;
 
-        public WindowManager(int width, int height)
+        public WindowManager()
         {
-            this.Resolution[0] = width;
-            this.Resolution[1] = height;
-            this.driver = new VideoDriver(width, height);
-            Sys.MouseManager.ScreenWidth = (uint)width;
-            Sys.MouseManager.ScreenHeight = (uint)height;
+            this.driver = new VideoDriver();
         }
 
         private void QUIT() { this.RUN = false; }
 
-        
-
         public void Init()
         {
+            Sys.MouseManager.ScreenWidth = (uint)driver.Resolution[0];
+            Sys.MouseManager.ScreenHeight = (uint)driver.Resolution[1];
+            this.mousePos = new System.Drawing.Point(driver.Resolution[0] / 2, driver.Resolution[1] / 2);
             Screen screen = new Screen(this.bg);
-            this.driver.Clear(this.bg);
-            BeforeDrawLoop(ref screen);
+            driver.Clear(this.bg);
+            BeforeRun(ref screen);
             ulong frame = 1;
             do
             {
-                DrawLoop(ref screen, frame);
-                this.driver.RenderScreen(screen);
+                Run(ref screen, frame);
+                driver.RenderScreen(screen);
                 //screen.ClearControls();
                 frame++;
             } while (this.RUN);
-            this.driver.Disable();
+            driver.Disable();
         }
 
-        private void BeforeDrawLoop(ref Screen screen)
+        private void DrawMouse(ref Screen screen, int mouseIndex)
         {
-            Label frames = new Label("before draw loop", 0, 0, Color.Black, Color.White);
-            screen.AddControl(frames);
-            Rectangle box = new Rectangle(Color.Gray, 50, 50, 300, 200, true);
-            screen.AddControl(box);
-            Rectangle titlebar = new Rectangle(Color.Blue, 50, 50, 300, 16, true);
-            screen.AddControl(titlebar);
-            Label title = new Label("Ostrzezenie", 50, 50, Color.Blue, Color.White);
-            screen.AddControl(title);
+            //TODO
+            screen.Controls[mouseIndex].X = (int)Sys.MouseManager.X;
+            screen.Controls[mouseIndex].Y = (int)Sys.MouseManager.Y;
+            screen.Controls[mouseIndex].Update();
         }
 
-        private void DrawLoop(ref Screen screen, ulong frame)
+        private void BeforeRun(ref Screen screen)
         {
-            ((Label)(screen.Controls[0])).Text = $"frame no. {frame}";
-            screen.Controls[0].Update();
+            const short taskbarHeight = 20;
+            Rectangle taskbar = new Rectangle(Color.Blue, 0, driver.Resolution[1] - taskbarHeight, driver.Resolution[0], taskbarHeight, true);
+            Rectangle startbtn = new Rectangle(Color.Green, 0, driver.Resolution[1] - taskbarHeight, 100, taskbarHeight, true);
+            screen.AddControl(taskbar);
+            screen.AddControl(startbtn);
+            Form form = new Form("Ostrzezenie!", 100, 50, 400, 200);
+            form.Content.Add(new Label("testowy napis lol", 10, 10, form.Color));
+            form.Update();
+            screen.AddControl(form);
+        }
 
-            if (frame > 500)
-            {
-                Circle testCircle = new Circle(Color.White, 20, 80, 20, true);
-                screen.AddControl(testCircle);
-            }
-
-            if (frame > 1000) QUIT();
+        private void Run(ref Screen screen, ulong frame)
+        {
+            //DrawMouse(ref screen, 2);
         }
     }
 }

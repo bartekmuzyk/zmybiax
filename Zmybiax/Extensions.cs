@@ -72,11 +72,11 @@ namespace Zmybiax
             return result;
         }
 
-        public static RenderEvent WhichToRender(this Screen screen, int previousControlCount)
+        public static RenderEvent WhichToRender(this List<Control> controls, int previousControlCount)
         {
-            int countDifference = screen.Controls.Count - previousControlCount;
+            int countDifference = controls.Count - previousControlCount;
             if (countDifference >= 0)
-                return new RenderEvent(RenderEventType.Draw, FindAllControlsThatWereModifiedSinceLastRender(screen.Controls));
+                return new RenderEvent(RenderEventType.Draw, FindAllControlsThatWereModifiedSinceLastRender(controls));
             else
                 return new RenderEvent(RenderEventType.Undraw, new List<Control>(0));
         }
