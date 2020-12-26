@@ -7,5 +7,5 @@ o takie no
 
 Na razie Zmybiax dostępny jest jedynie w wersji Live CD (bez instalacji).
 
-![Image](src)
+![Logo](https://i.ibb.co/th1hD9H/zmybiax-logo.png)
 [Pobierz najnowsze wydanie (v0.1)](https://github.com/bartekmuzyk/zmybiax/releases)
